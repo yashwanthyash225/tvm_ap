@@ -43,15 +43,11 @@ print(mod.astext())
 # print(mod.astext())
 ### Compiling the Relay Graph/IR for specified target riscv64
 target = tvm.target.Target("llvm")
-# target = tvm.target.Target("ccompiler")
 with tvm.transform.PassContext(opt_level=3):
 # with tvm.transform.PassContext(opt_level=3, config={"tir.add_lower_pass": [(1, print_tir)]}):
     lib = relay.build(mod, target=target, params=params)
-	# lib = relay.build(mod, target="c", params=params, runtime=Runtime("crt", {"system-lib": True}), executor=Executor("aot", {"link-params": True}))
 # print(lib.get_lib().get_source())		# Prints the LLVM IR of the model
 
-
-# tvm.micro.export_model_library_format(lib, "lower.tar")
 # ### Running the model
 device = tvm.cpu(0)
 m = graph_executor.GraphModule(lib["default"](device))
